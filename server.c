@@ -1,7 +1,4 @@
-#include <stdio.h>
-#include <signal.h>
-#include <sys/types.h>
-#include <unistd.h>
+#include "minitalk.h"
 
 void	ft_putchar(char c)
 {
@@ -26,17 +23,35 @@ void	ft_putnbr(int n)
 		ft_putchar(n + 48);
 }
 
-int main(int argc, char **argv)
+void	receive_msg(int sig)
+{
+	static int	size;
+	static char	to_print;
+
+	to_print += ((sig % 2) << size);
+	size++;
+	if (size == 8)
+	{
+		ft_putchar(to_print);
+		if (!to_print)
+			ft_putchar('\n');
+		to_print = 0;
+		size = 0;
+	}
+}
+
+int main()
 {
 	pid_t pid;
 
 	pid = getpid();
 	ft_putnbr(pid);
     ft_putchar('\n');
-    // signal(SIGUSR2, your fonc);
-    // signal(SIGUSR1, your fonc);
+    
     while (1)
     {
+		signal(SIGUSR2, receive_msg);
+	    signal(SIGUSR1, receive_msg);
         pause();
     }
 

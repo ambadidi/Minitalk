@@ -1,5 +1,46 @@
-#include <signal.h>
+#include "minitalk.h"
 
+
+
+int	ft_atoi(const char *str)
+{
+	size_t		i;
+	long int	res;
+	long int	sign;
+
+	i = 0;
+	res = 0;
+	sign = 1;
+	while ((9 <= str[i] && str[i] <= 13) || str[i] == 32)
+		i++;
+	if (str[i] == '-' || str[i] == '+')
+	{
+		if (str[i] == '-')
+			sign = -1;
+		i++;
+	}
+	while (str[i] >= '0' && str[i] <= '9')
+	{
+		res = res * 10 + str[i] - '0';
+		if (res >= 4294967296)
+			return ((sign > 0) ? -1 : 0);
+		i++;
+	}
+	return (res * sign);
+}
+
+int	ft_strlen(const char *str)
+{
+	int	i;
+
+	i = 0;
+	while (*str)
+	{
+		i++;
+		str++;
+	}
+	return (i);
+}
 void    send_msg(int pid_server, char *msg)
 {
 	int bit;
@@ -7,7 +48,7 @@ void    send_msg(int pid_server, char *msg)
 	int i;
 
 	i = 0;
-	len = ft_stren(msg);
+	len = ft_strlen(msg);
 	while (i <= len)
 	{
 		bit = 0;
